@@ -6,8 +6,9 @@ import { getUser } from "./postgres/query-user.js";
 import { redisClient } from "./config/connect-redis.js";
 import { getDataFromRedus } from "./redis/query-redis.js";
 import jwt from "jsonwebtoken";
-import { verifyToken } from "./middleware/verifyToken.js";
+import { verifyToken } from "./middleware/verify-token.js";
 import cookieParser from "cookie-parser";
+import { refeshToken } from "./middleware/refesh-token.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -15,7 +16,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.get("/users", verifyToken, getUser);
-app.get("/redis/macbook", getDataFromRedus);
+app.get("/redis/macbook", verifyToken, getDataFromRedus);
 app.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -37,7 +38,6 @@ app.post("/login", async (req, res) => {
         { expiresIn: "7d" },
       );
 
-      // save to cookies
       res.cookie("accessToken", accessToken, {
         httpOnly: true,
         maxAge: 15 * 60 * 1000,
@@ -70,6 +70,8 @@ app.post("/logout", (req, res) => {
 
   res.json({ message: "Đăng xuất thành công" });
 });
+
+app.post("/refresh-token", refeshToken);
 
 app.listen(port, () => {
   console.log(`🚀 App listening on port ${port}`);
