@@ -40,7 +40,7 @@ app.post("/login", async (req, res) => {
 
       res.cookie("accessToken", accessToken, {
         httpOnly: true,
-        maxAge: 1 * 60 * 1000, // 1 minute to match JWT expiration
+        maxAge: 1 * 60 * 1000,
       });
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
