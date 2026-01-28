@@ -30,7 +30,7 @@ app.post("/login", async (req, res) => {
       const accessToken = jwt.sign(
         { id: user.id, email: user.email },
         process.env.SECRET_KEY,
-        { expiresIn: "15m" },
+        { expiresIn: "1m" },
       );
       const refreshToken = jwt.sign(
         { id: user.id, email: user.email },
@@ -40,7 +40,7 @@ app.post("/login", async (req, res) => {
 
       res.cookie("accessToken", accessToken, {
         httpOnly: true,
-        maxAge: 15 * 60 * 1000,
+        maxAge: 1 * 60 * 1000, // 1 minute to match JWT expiration
       });
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,

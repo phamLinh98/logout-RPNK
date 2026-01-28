@@ -17,7 +17,6 @@ export const getUser = async (req, res) => {
     //await redisClient.set(cacheKey, JSON.stringify(result.rows), { EX: 60 });
 
     res.json({
-      source: "postgres",
       data: result.rows,
     });
   } catch (err) {
